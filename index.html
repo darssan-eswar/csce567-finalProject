@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Parking Behavior Using Sensor Data</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="brand-lockup">
+      <a href="https://www.parkeze.com" target="_blank" rel="noopener">
+        <img src="parkeye-logo.png" alt="Parkeze logo">
+        <span>Parkeze</span>
+      </a>
+    </div>
+    <div class="header-copy">
+      <h1>Campus Parking Behavior Using Sensor Data</h1>
+      <p class="project-meta">
+        Darssan Eswaramoorthi · Senior B.S.E. Computer Engineering Student ·
+        CSCE 567 Visualization Tools Final Project
+      </p>
+      <p>
+        This dashboard analyzes real parking sensor data from a partnered USC pilot
+        where Parkeze ground sensors were deployed in campus parking spaces.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel source-note">
+      <h2>Data Source and Scope</h2>
+      <p>
+        The default dataset covers parking sensor records from October 19, 2025
+        through January 15, 2026. The comparison files cover January 11, 2026
+        through January 18, 2026. These files come from a partnered University of
+        South Carolina pilot where sensors were installed on the ground to record
+        space-level Occupied and Available events.
+      </p>
+      <p>
+        This dashboard is for student analysis and visualization only. It uses the
+        provided local Excel reports and is intended to respect the project contract
+        guidelines, data-sharing limits, and pilot-use restrictions.
+      </p>
+      <p>
+        More information about Parkeze is available at
+        <a href="https://www.parkeze.com" target="_blank" rel="noopener">www.parkeze.com</a>.
+        Viewers can request access to the Parkeze developer platform and data
+        analysis platform through the company website.
+      </p>
+    </section>
+
+    <section class="panel image-section">
+      <h2>Pilot Location and Sensor Context</h2>
+      <p>
+        These images clarify the Golden Spur pilot location and show the type of
+        flush-mount ground sensors used to collect the parking status data.
+      </p>
+      <div class="image-grid">
+        <figure>
+          <img src="usc-golden-spur-location.png" alt="Golden Spur parking lot location and selected sensor spaces">
+          <figcaption>
+            Golden Spur Parking Lot, also identified as the N1 Faculty/Staff
+            Seniority Parking Lot, located near Greene Street and Park Street in
+            Columbia, South Carolina.
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="parkeze-ground-sensors.png" alt="Parkeze flush-mount ground sensors installed in parking spaces">
+          <figcaption>
+            Example of Parkeze flush-mount magnetic sensors installed directly in
+            parking spaces to detect vehicle presence without cameras.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="panel controls">
+      <div>
+        <label for="datasetSelect">Dataset</label>
+        <select id="datasetSelect">
+          <option value="parking_analytics_report_2025-10-19_to_2026-01-15.xlsx">
+            Main dataset: 2025-10-19 to 2026-01-15
+          </option>
+          <option value="parking_analytics_report_2026-01-11_to_2026-01-18.xlsx">
+            Comparison: 2026-01-11 to 2026-01-18
+          </option>
+          <option value="parking_analytics_report_2026-01-11_to_2026-01-18-2.xlsx">
+            Comparison 2: 2026-01-11 to 2026-01-18
+          </option>
+        </select>
+      </div>
+
+      <div class="file-fallback">
+        <label for="fileInput">If local loading is blocked, choose the Excel files here</label>
+        <input id="fileInput" type="file" accept=".xlsx,.xls,.xlsm" multiple>
+      </div>
+
+      <p id="statusMessage" class="status">Loading main dataset...</p>
+    </section>
+
+    <section class="panel">
+      <h2>How to Use</h2>
+      <ul>
+        <li>Use the dropdown to switch between the provided Excel datasets.</li>
+        <li>Hover over charts or heatmap cells to see exact values.</li>
+        <li>The charts show daily trends, weekday averages, hourly patterns, and sensor activity.</li>
+        <li>Occupancy is marked as a percentage; sensor activity is counted from raw status records.</li>
+      </ul>
+    </section>
+
+    <section class="panel chart-section">
+      <h2>Daily Parking Occupancy Trends Over Time</h2>
+      <p>
+        This line chart shows the average parking occupancy for each date in the
+        report. It helps identify busier and quieter days and shows whether demand
+        changes over time.
+      </p>
+      <div class="chart-box">
+        <canvas id="dailyTrendChart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel chart-section">
+      <h2>Average Occupancy by Day of Week</h2>
+      <p>
+        This bar chart compares average occupancy by day of the week. It shows
+        whether parking demand is stronger on weekdays or weekends.
+      </p>
+      <div class="chart-box">
+        <canvas id="weekdayChart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel chart-section">
+      <h2>Hourly Parking Demand Patterns</h2>
+      <p>
+        This heatmap-style grid estimates average occupancy from raw sensor
+        timestamps grouped by hour and weekday. Darker cells show times when
+        parking demand is higher.
+      </p>
+      <div id="hourlyHeatmap" class="heatmap" aria-label="Hourly occupancy heatmap"></div>
+    </section>
+
+    <section class="panel chart-section">
+      <h2>Sensor Activity and Usage Frequency</h2>
+      <p>
+        This bar chart counts the number of raw status records for each sensor.
+        Higher values suggest spaces with more frequent parking activity.
+      </p>
+      <div class="chart-box">
+        <canvas id="sensorChart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Key Insights</h2>
+      <p id="crossInsight">
+        The charts connect overall daily demand with hourly behavior and individual
+        sensor activity.
+      </p>
+      <ul id="insightsList">
+        <li>Load a dataset to see parking insights.</li>
+      </ul>
+    </section>
+
+    <section class="panel disclaimer">
+      <h2>Disclaimer</h2>
+      <p>
+        Data shown here is limited to the provided pilot Excel reports. No external
+        APIs, private systems, or live sensor feeds are used. Results should be read
+        as an educational summary of the partnered USC pilot dataset, not as an
+        official operational report.
+      </p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
