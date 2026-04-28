@@ -1,7 +1,7 @@
 const DATASETS = [
-  "parking_analytics_report_2025-10-19_to_2026-01-15.xlsx",
-  "parking_analytics_report_2026-01-11_to_2026-01-18.xlsx",
-  "parking_analytics_report_2026-01-11_to_2026-01-18-2.xlsx"
+  "data/parking_analytics_report_2025-10-19_to_2026-01-15.xlsx",
+  "data/parking_analytics_report_2026-01-11_to_2026-01-18.xlsx",
+  "data/parking_analytics_report_2026-01-11_to_2026-01-18-2.xlsx"
 ];
 
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -50,16 +50,17 @@ fileInput.addEventListener("change", handleManualFiles);
 loadDataset(DATASETS[0]);
 
 async function loadDataset(fileName) {
-  statusMessage.textContent = `Loading ${fileName}...`;
+  const cacheKey = getFileName(fileName);
+  statusMessage.textContent = `Loading ${cacheKey}...`;
 
   try {
-    const workbook = loadedFiles[fileName] || await fetchWorkbook(fileName);
-    loadedFiles[fileName] = workbook;
+    const workbook = loadedFiles[cacheKey] || await fetchWorkbook(fileName);
+    loadedFiles[cacheKey] = workbook;
 
     const parsedData = parseWorkbook(workbook);
     renderDashboard(parsedData);
 
-    statusMessage.textContent = `Showing ${fileName}`;
+    statusMessage.textContent = `Showing ${cacheKey}`;
   } catch (error) {
     clearDashboard();
     statusMessage.textContent =
@@ -85,14 +86,19 @@ async function handleManualFiles(event) {
     loadedFiles[file.name] = XLSX.read(arrayBuffer, { type: "array", cellDates: true });
   }
 
-  if (loadedFiles[datasetSelect.value]) {
+  if (loadedFiles[getFileName(datasetSelect.value)]) {
     loadDataset(datasetSelect.value);
     return;
   }
 
   const firstLoadedName = Object.keys(loadedFiles)[0];
-  if (DATASETS.includes(firstLoadedName)) datasetSelect.value = firstLoadedName;
-  loadDataset(firstLoadedName);
+  const matchingDataset = DATASETS.find(dataset => getFileName(dataset) === firstLoadedName);
+  if (matchingDataset) datasetSelect.value = matchingDataset;
+  loadDataset(matchingDataset || firstLoadedName);
+}
+
+function getFileName(path) {
+  return String(path || "").split("/").pop();
 }
 
 function parseWorkbook(workbook) {

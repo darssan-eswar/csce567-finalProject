@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Campus Parking Behavior Using Sensor Data</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
@@ -12,7 +12,7 @@
   <header class="page-header">
     <div class="brand-lockup">
       <a href="https://www.parkeze.com" target="_blank" rel="noopener">
-        <img src="parkeye-logo.png" alt="Parkeze logo">
+        <img src="assets/parkeye-logo.png" alt="Parkeze logo">
         <span>Parkeze</span>
       </a>
     </div>
@@ -60,7 +60,7 @@
       </p>
       <div class="image-grid">
         <figure>
-          <img src="usc-golden-spur-location.png" alt="Golden Spur parking lot location and selected sensor spaces">
+          <img src="assets/usc-golden-spur-location.png" alt="Golden Spur parking lot location and selected sensor spaces">
           <figcaption>
             Golden Spur Parking Lot, also identified as the N1 Faculty/Staff
             Seniority Parking Lot, located near Greene Street and Park Street in
@@ -68,7 +68,7 @@
           </figcaption>
         </figure>
         <figure>
-          <img src="parkeze-ground-sensors.png" alt="Parkeze flush-mount ground sensors installed in parking spaces">
+          <img src="assets/parkeze-ground-sensors.png" alt="Parkeze flush-mount ground sensors installed in parking spaces">
           <figcaption>
             Example of Parkeze flush-mount magnetic sensors installed directly in
             parking spaces to detect vehicle presence without cameras.
@@ -81,13 +81,13 @@
       <div>
         <label for="datasetSelect">Dataset</label>
         <select id="datasetSelect">
-          <option value="parking_analytics_report_2025-10-19_to_2026-01-15.xlsx">
+          <option value="data/parking_analytics_report_2025-10-19_to_2026-01-15.xlsx">
             Main dataset: 2025-10-19 to 2026-01-15
           </option>
-          <option value="parking_analytics_report_2026-01-11_to_2026-01-18.xlsx">
+          <option value="data/parking_analytics_report_2026-01-11_to_2026-01-18.xlsx">
             Comparison: 2026-01-11 to 2026-01-18
           </option>
-          <option value="parking_analytics_report_2026-01-11_to_2026-01-18-2.xlsx">
+          <option value="data/parking_analytics_report_2026-01-11_to_2026-01-18-2.xlsx">
             Comparison 2: 2026-01-11 to 2026-01-18
           </option>
         </select>
@@ -177,6 +177,6 @@
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
